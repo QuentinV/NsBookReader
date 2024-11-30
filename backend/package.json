@@ -1,0 +1,21 @@
+{
+  "name": "nscreativebookreader-backend",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {},
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "epub": "ts-node src/epub.ts"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.4.0",
+    "cors": "^2.8.5",
+    "epub2": "^3.0.2",
+    "express": "^4.21.0",
+    "node-html-parser": "^6.1.13",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  }
+}
