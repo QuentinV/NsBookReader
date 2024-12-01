@@ -2,6 +2,7 @@ import { EPub } from 'epub2';
 import fs from 'fs';
 import path from 'path';
 import { parse } from 'node-html-parser';
+import { Agent, fetch, Client } from "undici";
 
 const epubFilePath = path.resolve(__dirname, '.epub/LesMagiciens.T1.epub');
 
@@ -38,11 +39,11 @@ if ( !fs.existsSync(epubFilePath) ) {
 } else {
     (async () => {
         const result = await readEpub(epubFilePath)
-        for ( let i = 0; i < result.length; ++i ) {
+        for ( let i = 3; i < result.length; ++i ) {
             const start = Date.now();
             console.log('running tts for ', i)
             const text = result[i];
-            const res = await fetch('http://localhost:8680/tts', {
+            const res = await fetch('http://192.168.1.50:8680/tts', {
                 method: 'POST', 
                 body: JSON.stringify({
                     "text": text,
@@ -52,7 +53,12 @@ if ( !fs.existsSync(epubFilePath) ) {
                 }),
                 headers: {
                     "Content-Type": "application/json"
-                }
+                },
+                dispatcher: new Agent({
+                    connectTimeout: 24 * 60 * 60 * 1000, 
+                    headersTimeout: 24 * 60 * 60 * 1000, 
+                    bodyTimeout: 24 * 60 * 60 * 1000,   
+                })
             });
             const blob = await res.blob();
             fs.writeFileSync(path.resolve(__dirname, `.epub/.result/${i}.mp3`), Buffer.from(await blob.arrayBuffer()));
