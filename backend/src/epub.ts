@@ -30,7 +30,7 @@ const readEpub = async ( epubPath: string ): Promise<string> => {
         }        
     }));
 
-    return (await Promise.all(promises)).filter( (b: string) => !!b ).join('\r\n\r\n\r\n//=====//\r\n\r\n\r\n')
+    return (await Promise.all(promises)).filter( (b: string) => !!b );
 }
 
 if ( !fs.existsSync(epubFilePath) ) {
@@ -38,6 +38,25 @@ if ( !fs.existsSync(epubFilePath) ) {
 } else {
     (async () => {
         const result = await readEpub(epubFilePath)
-        fs.writeFileSync(path.resolve(__dirname,'.epub/result.txt'), result);
+        for ( let i = 0; i < result.length; ++i ) {
+            const start = Date.now();
+            console.log('running tts for ', i)
+            const text = result[i];
+            const res = await fetch('http://localhost:8680/tts', {
+                method: 'POST', 
+                body: JSON.stringify({
+                    "text": text,
+                    "model": "tts_models/multilingual/multi-dataset/xtts_v2",
+                    "language": "fr",
+                    "speaker": "Asya Anara"
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            const blob = await res.blob();
+            fs.writeFileSync(path.resolve(__dirname, `.epub/.result/${i}.mp3`), Buffer.from(await blob.arrayBuffer()));
+            console.log('mp3 file saved for ', i, Date.now() - start)
+        }
     })();
 }
