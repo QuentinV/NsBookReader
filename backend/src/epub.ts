@@ -39,7 +39,8 @@ if ( !fs.existsSync(epubFilePath) ) {
 } else {
     (async () => {
         const result = await readEpub(epubFilePath)
-        for ( let i = 3; i < result.length; ++i ) {
+        console.log(result[28])
+        /*for ( let i = 3; i < result.length; ++i ) {
             const start = Date.now();
             console.log('running tts for ', i)
             const text = result[i];
@@ -63,6 +64,6 @@ if ( !fs.existsSync(epubFilePath) ) {
             const blob = await res.blob();
             fs.writeFileSync(path.resolve(__dirname, `.epub/.result/${i}.mp3`), Buffer.from(await blob.arrayBuffer()));
             console.log('mp3 file saved for ', i, Date.now() - start)
-        }
+        }*/
     })();
 }
