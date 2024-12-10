@@ -4,8 +4,7 @@
   "private": true,
   "dependencies": {},
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "epub": "ts-node src/epub.ts"
+    "dev": "node -r ts-node/register --env-file=.env.local src/epub.ts"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
